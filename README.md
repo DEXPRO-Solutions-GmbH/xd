@@ -1,5 +1,7 @@
 # XD
 
+> DEXPRO Developer CLI with an X
+
 This project implements developer tools for DEXPRO employees.
 
 ## Installation
