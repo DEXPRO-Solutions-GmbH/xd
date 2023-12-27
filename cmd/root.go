@@ -8,5 +8,7 @@ func NewRootCmd() *cobra.Command {
 		Short: "DEXPRO Developer CLI with an X",
 	}
 
+	cmd.AddCommand(newGenCmd())
+
 	return cmd
 }
