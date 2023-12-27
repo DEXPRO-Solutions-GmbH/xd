@@ -27,3 +27,12 @@ jobs:
 
     - name: Lint
       run: go vet -v ./...
+
+    - name: Install locally
+      run: go install ./cmd/xd
+
+    - name: Test installed binary
+      run: xd --help
+
+    - name: Test installed binary
+      run: xd gen project-id customer.squeeze.one
