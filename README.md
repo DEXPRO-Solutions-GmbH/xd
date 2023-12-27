@@ -9,5 +9,5 @@ This project implements developer tools for DEXPRO employees.
 If you want to use these tools, you can install them from source:
 
 ```bash
-go install github.com/DEXPRO-Solutions-GmbH/xd/cmd/main@latest
+go install github.com/DEXPRO-Solutions-GmbH/xd/cmd/xd@latest
 ```
