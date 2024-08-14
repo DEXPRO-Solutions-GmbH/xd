@@ -7,6 +7,7 @@ import (
 	"log/slog"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	squeezegoclient "github.com/dexpro-solutions-gmbh/squeeze-go-client"
@@ -55,7 +56,9 @@ func newBenchmarkCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			if d.IsDir() {
+
+			keep := filterFile(path, d)
+			if !keep {
 				return nil
 			}
 
@@ -66,7 +69,7 @@ func newBenchmarkCmd() *cobra.Command {
 			defer func(file *os.File) {
 				err := file.Close()
 				if err != nil {
-					slog.Error("Closing file failed", "err", err)
+					slog.Error("Closing path failed", "err", err)
 				}
 			}(file)
 
@@ -77,11 +80,11 @@ func newBenchmarkCmd() *cobra.Command {
 				// Ignore the upload error and continue with next file - this allows the benchmark
 				// to still be run. That is most often what we want since Squeeze may decide
 				// to reject uploads of invalid files / file types.
-				slog.Error("Failed to upload document", "file", fileName, "err", resErr)
+				slog.Error("Failed to upload document", "path", fileName, "err", resErr)
 				return nil
 			}
 
-			slog.Info("File uploaded", "file", fileName)
+			slog.Info("File uploaded", "path", fileName)
 
 			documentCount += 1
 
@@ -133,6 +136,25 @@ func newBenchmarkCmd() *cobra.Command {
 	}
 
 	return cmd
+}
+
+// filterFile is used to filter files which should not be uploaded for a benchmark.
+//
+// This function respects common file types which would not be processed by Squeeze
+// and should generally not be uploaded.
+//
+// Returns true if the file should be uploaded, false otherwise.
+func filterFile(_ string, d fs.DirEntry) bool {
+	if d.IsDir() {
+		return false
+	}
+
+	// Ignore all hidden files (at least on Unix like systems where . prefix is used)
+	if strings.HasPrefix(d.Name(), ".") {
+		return false
+	}
+
+	return true
 }
 
 func getStepCount(client *squeezegoclient.QueueApi, stepName string) (int, error) {
