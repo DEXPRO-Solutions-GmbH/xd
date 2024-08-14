@@ -91,6 +91,11 @@ func newBenchmarkCmd() *cobra.Command {
 			panic(err)
 		}
 
+		if documentCount == 0 {
+			slog.Error("No files uploaded, stopping benchmark")
+			return
+		}
+
 		slog.Info("All files uploaded", "count", documentCount)
 
 		slog.Info("Waiting you can start the worker to process the document", "duration", *delay)
