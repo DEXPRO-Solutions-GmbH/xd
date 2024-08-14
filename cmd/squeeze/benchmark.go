@@ -74,7 +74,11 @@ func newBenchmarkCmd() *cobra.Command {
 
 			_, resErr := client.Document.ProcessDocument(1, 0, "", nil, file, fileName)
 			if resErr != nil {
-				return fmt.Errorf("failed to upload document: %w", resErr)
+				// Ignore the upload error and continue with next file - this allows the benchmark
+				// to still be run. That is most often what we want since Squeeze may decide
+				// to reject uploads of invalid files / file types.
+				slog.Error("Failed to upload document", "file", fileName, "err", resErr)
+				return nil
 			}
 
 			slog.Info("File uploaded", "file", fileName)
