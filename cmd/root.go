@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/DEXPRO-Solutions-GmbH/xd/cmd/dns"
 	"github.com/DEXPRO-Solutions-GmbH/xd/cmd/squeeze"
 	"github.com/spf13/cobra"
 )
@@ -13,6 +14,7 @@ func NewRootCmd() *cobra.Command {
 
 	cmd.AddCommand(newGenCmd())
 	cmd.AddCommand(squeeze.NewRootCmd())
+	cmd.AddCommand(dns.NewRootCmd())
 
 	return cmd
 }
