@@ -77,9 +77,11 @@ func newHosttechUpdateRecordsCommand() *cobra.Command {
 		}
 
 		// User has accepted
-		// TODO: Update records
-		cmd.Println("Update not yet implemented")
-		os.Exit(1)
+		err = dnsutils.Update(context.Background(), *zone, records, *newValue, provider)
+		if err != nil {
+			cmd.PrintErrf("failed to update records: %v\n", err)
+			os.Exit(1)
+		}
 	}
 
 	return cmd
